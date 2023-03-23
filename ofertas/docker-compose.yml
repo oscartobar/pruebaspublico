@@ -1,0 +1,52 @@
+version: "3"
+services:
+  users_db:
+    image: postgres
+    environment:
+      POSTGRES_DB: monitor_users
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+  users:
+    image: ghcr.io/misw-4301-desarrollo-apps-en-la-nube/entrega1-users:latest
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      DB_NAME: monitor_users
+      DB_HOST: users_db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+    depends_on:
+      - users_db  
+
+  
+
+  offers_db:
+    image: postgres
+    environment:
+      POSTGRES_DB: monitor_offers
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+      
+  offers:
+    build: .
+    ports:
+      - "3003:3003"
+    environment:
+      DB_NAME: monitor_offers
+      DB_HOST: offers_db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DATABASE_URL: postgresql://postgres:postgres@offers_db:5432/monitor_offers
+      USERS_PATH: users
+    depends_on:
+      - offers_db
+      - users      
+
+      
+

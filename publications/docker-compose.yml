@@ -1,0 +1,48 @@
+version: "3"
+services:
+
+  publication_db:
+    image: mysql:5.7
+    container_name: publication-db
+    restart: unless-stopped
+    ports:
+        - 3306:3306 # Puerto Host(local) : Puerto Contenedora
+    volumes:
+      - mysql_db_container:/var/lib/mysql
+    environment:
+        MYSQL_ROOT_PASSWORD: 123456
+        MYSQL_DATABASE: publication
+        MYSQL_USER: root
+        MYSQL_PASSWORD: 123456
+    networks:
+      - RED_publication
+    hostname: publication_DB
+
+  publication_app:
+    build: .
+    restart: always
+    ports:
+        - "5000:5000"
+    container_name: publication-app
+    networks:
+      - RED_publication
+      - red_web
+    environment:
+      URLSEGURIDAD: "http://users_APP:3000"
+      MYSQL_HOST: publication_db
+      MYSQL_PORT: 3306
+      MYSQL_DB: publication
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 123456
+    hostname: publication_app
+    depends_on:
+      - publication_db
+      # - api servicio user
+
+volumes:
+  mysql_db_container:
+networks:
+  RED_publication:
+    driver: bridge
+  red_web:
+    driver: bridge

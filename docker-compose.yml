@@ -1,0 +1,145 @@
+version: "3"
+services:
+  users-db:
+    image: postgres
+    container_name: users-db
+    environment:
+      POSTGRES_DB: mydb
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    ports:
+      - "30001:5432"
+    volumes:
+      - db_users:/var/lib/postgres
+    networks:
+      - RED_usuarios
+    hostname: users_BD
+
+  users:
+    container_name: users
+    build: ./users
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://myuser:mypassword@users_BD:5432/mydb
+    networks:
+        - RED_usuarios
+        - RED_web
+    hostname: users
+    depends_on:
+       - users-db
+  
+  routes-db:
+    image: postgres
+    container_name: routes-db
+    environment:
+      POSTGRES_DB: mydb
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    ports:
+      - "30002:5432"
+    volumes:
+      - db_routes:/var/lib/postgres
+    networks:
+      - RED_routes
+    hostname: routes_BD
+
+  routes-api:
+    container_name: routes-api
+    build: ./routes
+    restart: always
+    ports:
+      - "3002:3002"
+    environment:
+      DATABASE_URL: postgresql://myuser:mypassword@routes_BD:5432/mydb
+    networks:
+        - RED_routes
+        - RED_web
+    hostname: routes_APP
+    depends_on:
+       - routes-db
+       - users
+
+  ofertas-db:
+    image: postgres
+    container_name: ofertas-db
+    environment:
+      POSTGRES_DB: mydb
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    ports:
+      - "30003:5432"
+    volumes:
+      - db_ofertas:/var/lib/postgres
+    networks:
+      - RED_ofertas
+    hostname: ofertas_BD
+
+  ofertas-api:
+    container_name: ofertas-api
+    build: ./ofertas
+    restart: always
+    ports:
+      - "3003:3003"
+    environment:
+      DATABASE_URL: postgresql://myuser:mypassword@ofertas_BD:5432/mydb
+    networks:
+        - RED_ofertas
+        - RED_web
+    hostname: ofertas_APP
+    depends_on:
+       - ofertas-db
+       - users
+
+  publication_db:
+    image: postgres
+    container_name: publication-db
+    environment:
+      POSTGRES_DB: mydb
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    ports:
+      - "30004:5432"
+    volumes:
+      - db_ofertas:/var/lib/postgres
+    networks:
+      - RED_publication
+    hostname: publication_DB
+    
+  publicaciones-api:
+    container_name: publicaciones-api
+    build: ./publications
+    restart: always
+    ports:
+      - "3001:3001"
+    environment:
+      DATABASE_URL: postgresql://myuser:mypassword@publication_DB:5432/mydb
+    networks:
+        - RED_publication
+        - RED_web
+    hostname: publication_APP
+    depends_on:
+       - publication_db
+       - users
+volumes:
+  db_users:
+    driver: local
+  db_routes:
+    driver: local
+  db_ofertas:
+    driver: local
+  db_publication:
+    driver: local
+networks:
+  RED_routes:
+    driver: bridge
+  RED_web:
+    driver: bridge  
+  RED_usuarios:
+    driver: bridge  
+  RED_ofertas:
+    driver: bridge  
+  RED_publication:
+    driver: bridge 
+

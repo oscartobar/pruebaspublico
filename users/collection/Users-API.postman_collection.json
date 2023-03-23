@@ -1,0 +1,129 @@
+{
+	"info": {
+		"_postman_id": "dc1bb346-4ad8-46d5-9a78-9bf8efc306f9",
+		"name": "Users-API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Sign Up",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"jose\",\n    \"email\": \"j.garay@uniandes.edu.co\",\n    \"password\": \"joseluis\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{USERS-API-URL}}/users/",
+					"host": [
+						"{{USERS-API-URL}}"
+					],
+					"path": [
+						"users",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Sign In",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"pm.environment.set(\"USERS_TOKEN\", jsonData[\"token\"]);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"goose\",\n    \"password\": \"goosanos\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{USERS-API-URL}}/users/auth",
+					"host": [
+						"{{USERS-API-URL}}"
+					],
+					"path": [
+						"users",
+						"auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Ping",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{USERS-API-URL}}/users/ping",
+					"host": [
+						"{{USERS-API-URL}}"
+					],
+					"path": [
+						"users",
+						"ping"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User Info",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{USERS_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{USERS_TOKEN}}",
+						"type": "default",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{USERS-API-URL}}/users/me",
+					"host": [
+						"{{USERS-API-URL}}"
+					],
+					"path": [
+						"users",
+						"me"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

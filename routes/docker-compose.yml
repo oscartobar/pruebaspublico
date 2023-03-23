@@ -1,0 +1,32 @@
+version: "3"
+services:
+  api:
+    build: .
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      SQLALCHEMY_DATABASE_URI: postgresql://myuser:mypassword@db:5432/db_trayectos
+      JWT_SECRET_KEY: users_s4cret_ke1
+    networks:
+      - TRAYECTOS_NETWORK
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: db_trayectos
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - db:/var/lib/postgres
+    networks:
+      - TRAYECTOS_NETWORK
+volumes:
+  db:
+    driver: local
+networks:
+  TRAYECTOS_NETWORK:
+    driver: bridge
+

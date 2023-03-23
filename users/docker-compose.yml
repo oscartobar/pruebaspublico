@@ -1,0 +1,32 @@
+version: "3"
+services:
+  api:
+    build: .
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://myuser:mypassword@db:5432/mydb
+      JWT_ACCESS_TOKEN_EXPIRES: 15
+    networks:
+      - USER_NETWORK
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: mydb
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - db:/var/lib/postgres
+    networks:
+      - USER_NETWORK
+volumes:
+  db:
+    driver: local
+networks:
+  USER_NETWORK:
+    driver: bridge
+
