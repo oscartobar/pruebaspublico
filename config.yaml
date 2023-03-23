@@ -1,0 +1,22 @@
+team: Grupo 9
+board: https://github.com/orgs/MISW-4301-Desarrollo-Apps-en-la-Nube/projects/48
+user-management:
+  folder: users
+  port: 3000
+  authors:
+    - j.garay
+post-management:
+  folder: publications
+  port: 3001
+  authors:
+    - jm.riveraa
+offer-management:
+  folder: ofertas
+  port: 3003
+  authors:
+    - o.tobar
+journey-management:
+  folder: routes
+  port: 3002
+  authors:
+    - h.foreror
